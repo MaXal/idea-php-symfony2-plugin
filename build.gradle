@@ -16,22 +16,19 @@ targetCompatibility = 1.8
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    version ideaVersion
+    localPath '/Applications/PhpStorm 2020.2 EAP.app'
+    type 'PS'
     updateSinceUntilBuild false
     plugins = [
-            "com.jetbrains.php:${phpPluginVersion}",
-            "com.jetbrains.twig:${twigPluginVersion}",
-            "com.jetbrains.php.dql:${dqlPluginVersion}",
+            "php",
+            "twig",
+            "dql",
             "de.espend.idea.php.annotation:${annotationPluginVersion}",
             "de.espend.idea.php.toolbox:${toolboxPluginVersion}",
-            'coverage',
             'webDeployment',
             'yaml',
             'CSS',
-            'java-i18n',
-            'properties',
-            'xpath',
-            'java'
+            'xpath'
     ]
     pluginName 'Symfony Support'
 
