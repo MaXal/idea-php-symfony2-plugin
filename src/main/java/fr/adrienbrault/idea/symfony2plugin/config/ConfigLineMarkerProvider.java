@@ -30,7 +30,7 @@ public class ConfigLineMarkerProvider implements LineMarkerProvider {
     }
 
     @Override
-    public void collectSlowLineMarkers(@NotNull List<PsiElement> psiElements, @NotNull Collection<LineMarkerInfo> result) {
+    public void collectSlowLineMarkers(@NotNull List<? extends PsiElement> psiElements, @NotNull Collection<? super LineMarkerInfo<?>> result) {
         if(psiElements.size() == 0 || !Symfony2ProjectComponent.isEnabled(psiElements.get(0))) {
             return;
         }
@@ -47,7 +47,7 @@ public class ConfigLineMarkerProvider implements LineMarkerProvider {
         }
     }
 
-    private void visitRootElements(@NotNull Collection<LineMarkerInfo> result, @NotNull PsiElement psiElement, @NotNull LazyConfigTreeSignatures function) {
+    private void visitRootElements(Collection<? super LineMarkerInfo<?>> result, @NotNull PsiElement psiElement, @NotNull LazyConfigTreeSignatures function) {
         PsiElement parent = psiElement.getParent();
         if(!(parent instanceof YAMLKeyValue)) {
             return;

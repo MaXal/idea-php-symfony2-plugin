@@ -36,7 +36,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.*;
 import com.intellij.util.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndex;
@@ -53,7 +53,7 @@ import java.util.*;
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
-public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeInsightFixtureTestCase {
+public abstract class SymfonyLightCodeInsightFixtureTestCase extends BasePlatformTestCase {
 
     @Override
     public void setUp() throws Exception {
@@ -487,7 +487,7 @@ public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeIn
         Set<String> items = new HashSet<>();
 
         for (IntentionAction intentionAction : IntentionManager.getInstance().getIntentionActions()) {
-            if(!intentionAction.isAvailable(getProject(), getEditor(), psiElement.getContainingFile())) {
+            if(!intentionAction.isAvailable(getProject(), myFixture.getEditor(), psiElement.getContainingFile())) {
                 continue;
             }
 
@@ -562,15 +562,15 @@ public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeIn
 
         final List<PsiElement> elements = collectPsiElementsRecursive(psiElement);
 
-        for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.INSTANCE.allForLanguage(psiElement.getLanguage())) {
-            Collection<LineMarkerInfo> lineMarkerInfos = new ArrayList<LineMarkerInfo>();
+        for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.getInstance().allForLanguage(psiElement.getLanguage())) {
+            Collection<LineMarkerInfo<?>> lineMarkerInfos = new ArrayList<>();
             lineMarkerProvider.collectSlowLineMarkers(elements, lineMarkerInfos);
 
             if(lineMarkerInfos.size() == 0) {
                 continue;
             }
 
-            for (LineMarkerInfo lineMarkerInfo : lineMarkerInfos) {
+            for (LineMarkerInfo<?> lineMarkerInfo : lineMarkerInfos) {
                 if(assertMatch.match(lineMarkerInfo)) {
                     return;
                 }
@@ -584,8 +584,8 @@ public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeIn
 
         final List<PsiElement> elements = collectPsiElementsRecursive(psiElement);
 
-        for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.INSTANCE.allForLanguage(psiElement.getLanguage())) {
-            Collection<LineMarkerInfo> lineMarkerInfos = new ArrayList<LineMarkerInfo>();
+        for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.getInstance().allForLanguage(psiElement.getLanguage())) {
+            Collection<LineMarkerInfo<?>> lineMarkerInfos = new ArrayList<>();
             lineMarkerProvider.collectSlowLineMarkers(elements, lineMarkerInfos);
 
             if(lineMarkerInfos.size() > 0) {
@@ -774,7 +774,7 @@ public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeIn
 
         @Override
         public void run() {
-            CommandProcessor.getInstance().executeCommand(getProject(), new Runnable() {
+            CommandProcessor.getInstance().executeCommand(myFixture.getProject(), new Runnable() {
                 @Override
                 public void run() {
                     final CodeCompletionHandlerBase handler = new CodeCompletionHandlerBase(CompletionType.BASIC) {
@@ -805,9 +805,9 @@ public abstract class SymfonyLightCodeInsightFixtureTestCase extends LightCodeIn
                         }
                     };
 
-                    Editor editor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(getEditor(), getFile());
-                    handler.invokeCompletion(getProject(), editor);
-                    PsiDocumentManager.getInstance(getProject()).commitAllDocuments();
+                    Editor editor = InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(myFixture.getEditor(), myFixture.getFile());
+                    handler.invokeCompletion(myFixture.getProject(), editor);
+                    PsiDocumentManager.getInstance(myFixture.getProject()).commitAllDocuments();
                 }
             }, null, null);
         }

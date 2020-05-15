@@ -85,7 +85,7 @@ abstract public class SymfonyTempCodeInsightFixtureTestCase extends UsefulTestCa
                         childData[0] = getProject().getBaseDir().createChildData(this, file);
                     } else {
                         childData[0] = VfsUtil.createDirectoryIfMissing(
-                            getProject().getBaseDir(),
+                            getProject().getBasePath() + '/' +
                             StringUtils.join(Arrays.copyOf(paths, paths.length - 1), "/")
                         ).createChildData(this, paths[paths.length - 1]);
                     }

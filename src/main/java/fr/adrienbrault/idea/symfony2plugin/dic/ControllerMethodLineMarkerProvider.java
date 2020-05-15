@@ -102,10 +102,10 @@ public class ControllerMethodLineMarkerProvider implements LineMarkerProvider {
     }
 
     @Override
-    public void collectSlowLineMarkers(@NotNull List<PsiElement> psiElements, @NotNull Collection<LineMarkerInfo> results) {
+    public void collectSlowLineMarkers(@NotNull List<? extends PsiElement> psiElements, @NotNull Collection<? super LineMarkerInfo<?>> results) {
 
         for(PsiElement psiElement: psiElements) {
-            LineMarkerInfo lineMarkerInfo = collect(psiElement);
+            LineMarkerInfo<?> lineMarkerInfo = collect(psiElement);
             if(lineMarkerInfo != null) {
                 results.add(lineMarkerInfo);
             }
